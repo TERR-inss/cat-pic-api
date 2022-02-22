@@ -24,9 +24,22 @@ const uploadNew = async (req, res, next) => {
     }
 };
 
-const getAll = (req, res, next) => {
-    // dummy func here
-    res.json({ message: "GET all pics" });
+const getAll = async (req, res, next) => {
+    try {
+        res.locals.pics = await CatPic.find({});
+
+        return next();
+    }
+
+    catch (err) {
+        return next({
+            log: `catPicController.getAll: ERROR: ${err}`,
+            message: {
+                err: 'Error occurred in catPicController.getAll. Check server log for more detail',
+            },
+            status: 400,
+        });
+    }
 }
 
 const deleteAll = (req, res, next) => {

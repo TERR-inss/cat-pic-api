@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// allows use of .env file for database connection
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 // Uncomment the below and replace the empty string with your database URI

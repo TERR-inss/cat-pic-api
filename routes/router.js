@@ -6,8 +6,8 @@ router.post('/catPics', catPicsController.uploadNew, (req, res) => {
     return res.status(200).json(res.locals.message);
 });
 
-router.get('/catPics', catPicsController.getAll, (req,res) => {
-    return res.status(200).json(res.locals.message);
+router.get('/catPics', catPicsController.getAll, (req, res) => {
+    return res.status(200).json(res.locals.pics);
 });
 
 router.delete('/catPics', catPicsController.deleteAll);
