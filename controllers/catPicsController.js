@@ -55,7 +55,7 @@ const getOne = async (req, res, next) => {
             },
             status: 404
         });
-        
+
         else return next();
     }
 
@@ -70,14 +70,52 @@ const getOne = async (req, res, next) => {
     }
 }
 
-const deleteOne = (req, res, next) => {
-    // dummy func
-    res.json({ message: "only DELETE one" });
+const deleteOne = async (req, res, next) => {
+    const { name } = req.params;
+
+    try {
+        await CatPic.deleteOne({ "name": name });
+
+        res.locals.message = 'Successfully deleted cat pic';
+
+        return next();
+    }
+
+    catch (err) {
+        return next({
+            log: `catPicController.deleteOne: ERROR: ${err}`,
+            message: {
+                err: 'Error occurred in catPicController.deleteOne. Check server log for more detail',
+            },
+            status: 400
+        });
+    }
 }
 
-const updateOne = (req, res, next) => {
-    // dummy func
-    res.json({ message: "UPDATE one pic"});
+const updateOne = async (req, res, next) => {
+    const { name } = req.params;
+    const { image } = req.body;
+
+    try {
+        const mongoRes = await CatPic.updateOne({ "name": name }, {
+            "image": image,
+            "last_modified": Date.now()
+        });
+
+        res.locals.message = `Modified ${mongoRes.modifiedCount} documents.`
+
+        return next();
+    }
+    
+    catch (err) {
+        return next({
+            log: `catPicController.updateOne: ERROR: ${err}`,
+            message: {
+                err: 'Error occurred in catPicController.updateOne. Check server log for more detail',
+            },
+            status: 400
+        });
+    }
 }
 
 module.exports = {

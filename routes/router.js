@@ -21,8 +21,12 @@ router.get('/catPics', catPicsController.getAll, (req, res) => {
     return res.status(200).json(res.locals.pics);
 });
 
-router.put('/catPics/:name', catPicsController.updateOne);
+router.patch('/catPics/:name', catPicsController.updateOne, (req, res) => {
+    return res.status(200).json(res.locals.message);
+});
 
-router.delete('/catPics/:name', catPicsController.deleteOne);
+router.delete('/catPics/:name', catPicsController.deleteOne, (req, res) => {
+    return res.status(200).json(res.locals.message);
+});
 
 module.exports = router;
