@@ -42,14 +42,32 @@ const getAll = async (req, res, next) => {
     }
 }
 
-const deleteAll = (req, res, next) => {
-    // dummy func
-    res.json({ message: "DELETE all pics" });
-}
+const getOne = async (req, res, next) => {
+    const { name } = req.params;
 
-const getOne = (req, res, next) => {
-    // dummy func
-    res.json({ message: "only GET one pic" });
+    try {     
+        res.locals.pic = await CatPic.findOne({ "name": name });
+
+        if (res.locals.pic === null) return next({
+            log: 'Specified cat pic not found',
+            message: {
+                err: 'Could not find the requested resource'
+            },
+            status: 404
+        });
+        
+        else return next();
+    }
+
+    catch (err) {
+        return next({
+            log: `catPicController.getOne: ERROR: ${err}`,
+            message: {
+                err: 'Error occurred in catPicController.getOne. Check server log for more detail',
+            },
+            status: 400,
+        });
+    }
 }
 
 const deleteOne = (req, res, next) => {
@@ -67,6 +85,5 @@ module.exports = {
     getAll,
     getOne,
     deleteOne,
-    deleteAll,
     updateOne,
 };

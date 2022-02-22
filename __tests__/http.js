@@ -8,7 +8,7 @@ const app = express();
 require('dotenv').config({ path: __dirname + '/../.env' });
 const server = 'http://localhost:' + (process.env.PORT || 3333);
 
-describe('Root route', () => {
+describe('Basic requests', () => {
   describe('/catPics', () => {
     describe('GET', () => {
       it('responds with 200 status and JSON content type', () => {
