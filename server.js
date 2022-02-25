@@ -7,7 +7,10 @@ const PORT = process.env.PORT || 3333;
 const app = express();
 
 // parse requests bearing payload in JSON format
-app.use(express.json());
+app.use(express.json({
+    type: 'application/json'
+}));
+
 // parse requests bearing payload in image/png format
 app.use(bodyParser.raw({
     type: 'image/png',
