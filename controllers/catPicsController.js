@@ -129,8 +129,8 @@ const updateOne = async (req, res, next) => {
 
 module.exports = {
     uploadNew,
-    getAll,
     getOne,
-    deleteOne,
+    getAll,
     updateOne,
+    deleteOne,
 };
