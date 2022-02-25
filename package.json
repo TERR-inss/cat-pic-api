@@ -4,6 +4,10 @@
   "description": "API for managing cat pics",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --config ./webpack.config.js",
+    "start": "node ./server.js",
+    "dev:hot": "NODE_ENV=development nodemon ./server/server.js & webpack-dev-server --open --hot",
+    "docker-dev:hot": "NODE_ENV=development docker-compose -f docker-compose-dev-hot.yml up",
     "test": "jest --verbose"
   },
   "author": "Terence Petersen",
@@ -11,7 +15,10 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "mongoose": "^6.2.2"
+    "mongoose": "^6.2.2",
+    "multer": "^1.4.4",
+    "pg": "^8.7.3",
+    "sharp": "^0.30.1"
   },
   "devDependencies": {
     "jest": "^27.5.1",

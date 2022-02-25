@@ -1,14 +1,21 @@
-const CatPic = require('../models/catPicModel');
+const fs = require('fs');
+const path = require('path');
+const db = path.join(__dirname, '../database.json');
+
+// let id = 0;
 
 const uploadNew = async (req, res, next) => {
-    try {
-        await CatPic.create({
-            name: req.body.name,
-            description: req.body.description,
-            image: req.body.image,
-        });
+    const { id, image } = req.body;
 
-        res.locals.message = 'Successfully uploaded cat pic';
+    try {
+        // here we read the database and parse it to return the object containing all the data
+        const dbData = await JSON.parse(fs.readFileSync(db));
+        // assign the current id as the label for storing the new image
+        dbData[id] = image;
+        // rewrite the database file with its new key value included
+        fs.writeFileSync(db, JSON.stringify(dbData));
+
+        res.locals.message = 'Image upload confirmed';
 
         return next();
     }
@@ -22,36 +29,18 @@ const uploadNew = async (req, res, next) => {
             status: 400,
         });
     }
-};
-
-const getAll = async (req, res, next) => {
-    try {
-        res.locals.pics = await CatPic.find({});
-
-        return next();
-    }
-
-    catch (err) {
-        return next({
-            log: `catPicController.getAll: ERROR: ${err}`,
-            message: {
-                err: 'Error occurred in catPicController.getAll. Check server log for more detail',
-            },
-            status: 400,
-        });
-    }
 }
 
 const getOne = async (req, res, next) => {
-    const { name } = req.params;
+    const { id } = req.params;
 
-    try {     
-        res.locals.pic = await CatPic.findOne({ "name": name });
+    try {           
+        res.locals.pic = await JSON.parse(fs.readFileSync(db))[id];
 
-        if (res.locals.pic === null) return next({
+        if (res.locals.pic === undefined) return next({
             log: 'Specified cat pic not found',
             message: {
-                err: 'Could not find the requested resource'
+                err: 'Could not return the requested resource'
             },
             status: 404
         });
@@ -70,13 +59,32 @@ const getOne = async (req, res, next) => {
     }
 }
 
+const getAll = async (req, res, next) => {
+    try {
+        res.locals.pics = fs.readFileSync(db);
+        return next();
+    }
+
+    catch (err) {
+        return next({
+            log: `catPicController.getAll: ERROR: ${err}`,
+            message: {
+                err: 'Error occurred in catPicController.getAll. Check server log for more detail',
+            },
+            status: 400,
+        });
+    }
+}
+
 const deleteOne = async (req, res, next) => {
-    const { name } = req.params;
+    const { id } = req.body;
 
     try {
-        await CatPic.deleteOne({ "name": name });
+        const dbData = JSON.parse(fs.readFileSync(db));
+        delete dbData[id];
+        fs.writeFileSync(db, JSON.stringify(dbData));
 
-        res.locals.message = 'Successfully deleted cat pic';
+        res.locals.message = `Successfully deleted cat pic: ${id}`;
 
         return next();
     }
@@ -93,16 +101,17 @@ const deleteOne = async (req, res, next) => {
 }
 
 const updateOne = async (req, res, next) => {
-    const { name } = req.params;
-    const { image } = req.body;
+    const { id, image } = req.body;
 
     try {
-        const mongoRes = await CatPic.updateOne({ "name": name }, {
-            "image": image,
-            "last_modified": Date.now()
-        });
+        // here we read the database and parse it to return the object containing all the data
+        const dbData = await JSON.parse(fs.readFileSync(db));
+        // assign the current id as the label for storing the new image
+        dbData[id] = image;
+        // rewrite the database file with its new key value included
+        fs.writeFileSync(db, JSON.stringify(dbData));
 
-        res.locals.message = `Modified ${mongoRes.modifiedCount} documents.`
+        res.locals.message = `Updated cat pic: ${id}.`
 
         return next();
     }
