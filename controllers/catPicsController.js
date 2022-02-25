@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const db = path.join(__dirname, '../database.json');
+const datastore = path.join(__dirname, '../datastore/');
 
-// let id = 0;
 
 const uploadNew = async (req, res, next) => {
-    const { id, image } = req.body;
+    const { id } = req.params;
+    const image = req.body;
 
     try {
         // here we read the database and parse it to return the object containing all the data
