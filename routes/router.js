@@ -17,7 +17,7 @@ router.get('/catPics', catPicsController.getAll, (req, res) => {
     return res.status(200).json(res.locals.list);
 });
 
-router.patch('/catPics', catPicsController.updateOne, (req, res) => {
+router.patch('/catPics/:id', catPicsController.updateOne, (req, res) => {
     return res.status(200).json(res.locals.message);
 });
 

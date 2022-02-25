@@ -4,7 +4,7 @@ const path = require('path');
 const datastore = path.join(__dirname, '../datastore/');
 
 
-const uploadNew = async (req, res, next) => {
+const uploadNew = (req, res, next) => {
     const { id } = req.params;
     const imageLocation = datastore + `${id}`;
     const image = req.body;
@@ -12,16 +12,13 @@ const uploadNew = async (req, res, next) => {
     const uploadNewErr = 'Error occurred in catPicController.uploadeNew. Check server log for more detail';  
 
     try {
-        await fs.open(imageLocation, err => {
-            if (err) return;
-            else return next({
+        if (fs.existsSync(imageLocation)) return next({
                 log: `Given ID already in use`,
                 message: { err: uploadNewErr },
                 status: 409,
             });
-        });
 
-        await fs.appendFile(imageLocation, image, err => {
+        fs.appendFileSync(imageLocation, image, err => {
             if (err) return next({
                 log: `catPicController.uploadNew: ERROR: ${err}`,
                 message: { err: uploadNewErr },
@@ -81,8 +78,6 @@ const getAll = async (req, res, next) => {
             });
         });
 
-        console.log(dir);
-
         const listOfPics = [];
 
         for await (const dirent of dir) {
@@ -105,40 +100,25 @@ const getAll = async (req, res, next) => {
     }
 }
 
-const deleteOne = async (req, res, next) => {
-    const { id } = req.body;
+const updateOne = (req, res, next) => {
+    const { id } = req.params;
+    const newImageData = req.body;
+    const imageLocation = datastore + `${id}`;
+
+    const updateOneErr = 'Error occurred in catPicController.updateOneErr. Check server log for more detail';    
 
     try {
-        const dbData = JSON.parse(fs.readFileSync(db));
-        delete dbData[id];
-        fs.writeFileSync(db, JSON.stringify(dbData));
+        if (!fs.existsSync(imageLocation)) return next({
+            log: 'No image at location indicated by provided ID',
+            message: { err: updateOneErr }
+        })
 
-        res.locals.message = `Successfully deleted cat pic: ${id}`;
-
-        return next();
-    }
-
-    catch (err) {
-        return next({
-            log: `catPicController.deleteOne: ERROR: ${err}`,
-            message: {
-                err: 'Error occurred in catPicController.deleteOne. Check server log for more detail',
-            },
-            status: 400
+        fs.writeFileSync(imageLocation, newImageData, err => {
+            if (err) return next({
+                log: 'Unable to update image specified by given ID',
+                message: { err: updateOneErr }
+            });
         });
-    }
-}
-
-const updateOne = async (req, res, next) => {
-    const { id, image } = req.body;
-
-    try {
-        // here we read the database and parse it to return the object containing all the data
-        const dbData = await JSON.parse(fs.readFileSync(db));
-        // assign the current id as the label for storing the new image
-        dbData[id] = image;
-        // rewrite the database file with its new key value included
-        fs.writeFileSync(db, JSON.stringify(dbData));
 
         res.locals.message = `Updated cat pic: ${id}.`
 
@@ -148,9 +128,35 @@ const updateOne = async (req, res, next) => {
     catch (err) {
         return next({
             log: `catPicController.updateOne: ERROR: ${err}`,
-            message: {
-                err: 'Error occurred in catPicController.updateOne. Check server log for more detail',
-            },
+            message: { err: updateOneErr },
+            status: 400
+        });
+    }
+}
+
+const deleteOne = (req, res, next) => {
+    const { id } = req.body;
+    const imageLocation = datastore + `${id}`;
+    
+    const deleteOneErr = 'Error occurred in catPicController.deleteOne. Check server log for more detail';
+
+    try {
+        fs.unlinkSync(imageLocation, err => {
+            if (err) return next({
+                log: 'Unable to delete image specified by given ID',
+                message: { err: deleteOneErr }
+            })
+        });
+
+        res.locals.message = `Successfully deleted cat pic: ${id}`;
+
+        return next();
+    }
+
+    catch (err) {
+        return next({
+            log: `catPicController.deleteOne: ERROR: ${err}`,
+            message: { err: deleteOneErr },
             status: 400
         });
     }
