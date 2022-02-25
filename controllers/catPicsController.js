@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-// const db = path.join(__dirname, '../database.json');
 const datastore = path.join(__dirname, '../datastore/');
 
 
@@ -8,6 +7,8 @@ const uploadNew = (req, res, next) => {
     const { id } = req.params;
     const imageLocation = datastore + `${id}`;
     const image = req.body;
+
+    console.log('type of image data --> ', typeof image)
 
     const uploadNewErr = 'Error occurred in catPicController.uploadeNew. Check server log for more detail';  
 
