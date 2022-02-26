@@ -6,9 +6,9 @@
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
     "start": "node ./server.js",
-    "dev:hot": "NODE_ENV=development nodemon ./server/server.js & webpack-dev-server --open --hot",
+    "dev:hot": "NODE_ENV=development nodemon ./server.js & webpack-dev-server --open --hot",
     "docker-dev:hot": "NODE_ENV=development docker-compose -f docker-compose-dev-hot.yml up",
-    "test": "jest --verbose"
+    "test": "NODE_ENV=test jest --verbose"
   },
   "author": "Terence Petersen",
   "license": "ISC",
@@ -19,7 +19,17 @@
     "sharp": "^0.30.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.6.0",
     "jest": "^27.5.1",
-    "supertest": "^6.2.2"
+    "nodemon": "^2.0.15",
+    "style-loader": "^3.3.1",
+    "supertest": "^6.2.2",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
+    "webpack-hot-middleware": "^2.25.1"
   }
 }
