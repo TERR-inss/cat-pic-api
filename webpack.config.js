@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: [
         // entry point of our app
-        /* ??~?~~?~~~?~~~?~~?~?? */
+        './server.js'
       ],
   output: {
     path: path.resolve(__dirname, 'dist'),
