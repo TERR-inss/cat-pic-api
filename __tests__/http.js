@@ -8,6 +8,7 @@ const sharp = require('sharp');
 require('dotenv').config({ path: __dirname + '/../.env' });
 const server = 'http://localhost:' + (process.env.PORT || 3333);
 
+const testImage = `${__dirname}/../long-cat.png`;
 
 describe('Basic suite', () => {
   describe('GET (ALL)', () => {
@@ -28,13 +29,31 @@ describe('Basic suite', () => {
   describe('GET (ONE)', () => {
     it('responds with 200 status and image/png content type', () => {
       return request(server)
-        .get('/catPics/firstPic')
+        .get('/catPics/shrimpy')
         .expect(200)
         .expect('Content-Type', 'image/png')
     });
   });
 
   describe('POST', () => {
+    it('responds with 200 status and confirmation message when png image sent in req.body', () => {
+      // const req = request(server)
+      //   .post('/catPics/testImage')
+
+      // const imgStream = fs.createReadStream(testImage);
+      // imgStream.on('end', () => req.end(done));
+      // imgStream.pipe(req, {end: false})
+
+      const testImageData = Buffer.from(fs.readFileSync(testImage));
+
+      return request(server)
+        .post('/catPics/testImage')
+        .set('content-type', 'image/png')
+        .attach('image', testImageData)
+        .expect(200)
+        .expect('Content-Type', /json/)
+    });
+
     it('responds with 400 status when no request body included', () => {
       return request(server)
         .post('/catPics/testImage')
