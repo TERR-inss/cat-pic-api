@@ -8,8 +8,6 @@ const uploadNew = (req, res, next) => {
     const imageLocation = datastore + `${id}`;
     const image = req.body;
 
-    console.log('type of image data --> ', typeof image)
-
     const uploadNewErr = 'Error occurred in catPicController.uploadeNew. Check server log for more detail';  
 
     try {
@@ -49,7 +47,7 @@ const getOne = (req, res, next) => {
     try {           
         res.locals.pic = fs.readFileSync(imageLocation, (err, data) => {
             if (err) return next({
-                log: 'Error attempting to read file at specified location',
+                log: 'Error attempting to read at specified location',
                 message: { err: getOneErr },
                 status: 404,                    
             });
@@ -96,7 +94,7 @@ const getAll = async (req, res, next) => {
             message: {
                 err: 'Error occurred in catPicController.getAll. Check server log for more detail',
             },
-            status: 400,
+            status: 500,
         });
     }
 }
@@ -130,7 +128,7 @@ const updateOne = (req, res, next) => {
         return next({
             log: `catPicController.updateOne: ERROR: ${err}`,
             message: { err: updateOneErr },
-            status: 400
+            status: 500
         });
     }
 }
