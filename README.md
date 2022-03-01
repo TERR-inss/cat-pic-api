@@ -4,10 +4,10 @@ This API handles all four basic CRUD operations for image/png files
 
 Basic setup and usage:
 
-To get the docker image from docker hub, open a terminal and run the following,
+To get the docker image from docker hub, open a terminal and run:
     docker pull terrinss951/catpicapi-prod:latest
 
-To run the container,
+To run the container:
     docker run -p 3000:3000 terrinss951/catpicapi-prod
 
 You can now make HTTP requests to the api's endpoints at
@@ -17,17 +17,17 @@ You can now make HTTP requests to the api's endpoints at
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 To get the name of the running container instance,
-Open another terminal and run
+open another terminal and run:
     docker ps
 
-To stop the running container,
+To stop the running container, run:
     docker stop [container-name]
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 To run the suite of tests provided,
-Open another terminal and run
+open another terminal and run:
     docker exec [container-name] npm run test
 
 
